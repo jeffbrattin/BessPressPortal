@@ -1,0 +1,6 @@
+@BessPressPortal.Api_HostAddress = http://localhost:5030
+
+GET {{BessPressPortal.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

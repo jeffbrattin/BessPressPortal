@@ -1,0 +1,15 @@
+﻿@page "/logout"
+@using BessPressPortal.Client.Services
+
+@inject CustomAuthStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<button class="btn btn-secondary" @onclick="HandleLogout">Logout</button>
+
+@code {
+    private async Task HandleLogout()
+    {
+        await AuthProvider.ClearTokenAsync();
+        Navigation.NavigateTo("/");
+    }
+}
