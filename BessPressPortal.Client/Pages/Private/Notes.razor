@@ -1,0 +1,77 @@
+﻿@page "/notes"
+@inject HttpClient Http
+@using BessPressPortal.Shared.Models // Make sure this is present for both NoteDto and CreateNoteDto
+
+<h3>My Notes</h3>
+
+<div class="form-group">
+    <label for="title">Title:</label>
+    <input id="title" class="form-control" @bind="newNoteCreateDto.Title" />
+</div>
+<div class="form-group">
+    <label for="content">Content:</label>
+    <textarea id="content" class="form-control" @bind="newNoteCreateDto.Content"></textarea>
+</div>
+<button class="btn btn-primary mt-2" @onclick="AddNote">Add Note</button>
+
+<h4 class="mt-4">Existing Notes</h4>
+@if (notes == null)
+{
+    <p><em>Loading notes...</em></p>
+}
+else if (!notes.Any())
+{
+    <p><em>No notes found.</em></p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var note in notes)
+        {
+            <li class="list-group-item">
+                <h5>@note.Title</h5>
+                <p>@note.Content</p>
+                <small>Created: @note.CreatedDate.ToShortDateString() - Expires: @note.ExpirationDate.ToShortDateString()</small>
+                @* <button class="btn btn-danger btn-sm ml-2" @onclick="() => DeleteNote(note.Id)">Delete</button> *@
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private CreateNoteDto newNoteCreateDto = new CreateNoteDto(); // Use CreateNoteDto for the form
+    private List<NoteDto> notes; // Keep NoteDto for displaying existing notes
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotes();
+    }
+
+    private async Task AddNote()
+    {
+        // Validation moved to CreateNoteDto with [Required] attributes
+        // The check here is just for minimal logic before sending
+        if (!string.IsNullOrWhiteSpace(newNoteCreateDto.Title) && !string.IsNullOrWhiteSpace(newNoteCreateDto.Content))
+        {
+            var result = await Http.PostAsJsonAsync("api/Notes", newNoteCreateDto); // Send CreateNoteDto
+
+            // This will now throw if [Required] on Title/Content fail or other server errors
+            result.EnsureSuccessStatusCode();
+
+            newNoteCreateDto = new CreateNoteDto(); // Reset form
+            await LoadNotes();
+        }
+    }
+
+    private async Task LoadNotes()
+    {
+        notes = await Http.GetFromJsonAsync<List<NoteDto>>("api/Notes");
+    }
+
+    private async Task DeleteNote(string id)
+    {
+        var result = await Http.DeleteAsync($"api/Notes/{id}");
+        result.EnsureSuccessStatusCode();
+        await LoadNotes();
+    }
+}

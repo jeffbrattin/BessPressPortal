@@ -1,7 +1,7 @@
 ﻿namespace BessPressPortal.Api.Controllers
 {
-    using BessPressPortal.Api.Data;
-    using BessPressPortal.Shared.Models;
+    using global::BessPressPortal.Api.Data;
+    using global::BessPressPortal.Shared.Models;
     using Microsoft.AspNetCore.Mvc;
 
 

@@ -1,0 +1,64 @@
+﻿
+@page "/AuthenticationTable"
+@using BessPressPortal.Shared.Models
+@using Newtonsoft.Json
+@inject HttpClient Http
+
+<h3>Register</h3>
+
+@if (!string.IsNullOrEmpty(ResultMessage))
+{
+    <div class="@ResultCssClass">@ResultMessage</div>
+}
+
+<EditForm Model="@NewUser" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Email:</label>
+        <InputText @bind-Value="NewUser.UserEmail" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <InputText @bind-Value="NewUser.Password" type="password" />
+    </div>
+
+    <button type="submit">Register</button>
+</EditForm>
+
+@code {
+    private CreateUserDto NewUser = new();
+    private string? ResultMessage;
+    private string ResultCssClass = "";
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+
+            var response = await Http.PostAsJsonAsync("api/authtable/adduser", NewUser);
+            var apiResult = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+
+            if (response.IsSuccessStatusCode && apiResult?.Success == true)
+            {
+                ResultMessage = apiResult.Message ?? "Registration successful.";
+                ResultCssClass = "text-success";
+            }
+            else
+            {
+                ResultMessage = apiResult?.Message ?? "An error occurred.";
+                ResultCssClass = "text-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            ResultMessage = $"Exception: {ex.Message}";
+            ResultCssClass = "text-danger";
+        }
+    }
+
+
+
+
+}

@@ -1,4 +1,7 @@
+using BessPressPortal.Api.Controllers.BessPressPortal.Server.Controllers;
 using BessPressPortal.Api.Data;
+using BessPressPortal.Api.Entities;
+using BessPressPortal.Api.Services;
 using BessPressPortal.Shared.Models.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -22,12 +25,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("BlazorClient", policy =>
     {
-        policy.WithOrigins(
-            "https://localhost:5000", // Blazor WebAssembly client URL (update for production)
-            "http://localhost:5000",
-            "https://localhost:7163",
-            "http://localhost:7163"
-        )
+        //policy.WithOrigins(
+        //    "https://localhost:5000", // Blazor WebAssembly client URL (update for production)
+        //    "http://localhost:5000",
+        //    "https://localhost:7163",
+        //    "http://localhost:7163"
+        //)
+        policy.AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader();
     });
@@ -75,10 +79,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//-----------------------
+//Lifetime Created	Shared?	Example Use
+//Singleton	Once per app	Yes (globally)	Config readers, static caches, stateless helpers
+//Scoped	Once per request	Yes (within request)	Database contexts, user-specific logic
+//Transient	New every time	No	Lightweight, disposable services
 
+builder.Services.AddSingleton<NotesService>();
+builder.Services.AddScoped<AuthenticationTableService>();
+builder.Services.AddScoped<IPasswordHasher<LoginEntity>, PasswordHasher<LoginEntity>>();
 builder.Services.AddSingleton<ITestRepository>(sp => new TestRepository(
 builder.Configuration.GetConnectionString("DefaultConnection")));
 // Update the code to handle the potential null value for the connection string
+
+//-----------------------
 
 if (string.IsNullOrEmpty(connString))
 {
@@ -108,9 +122,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("BlazorClient"); // Apply CORS before Authentication/Authorization
+//app.UseCors("BlazorClient"); // Apply CORS before Authentication/Authorization
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
 
 app.Run();

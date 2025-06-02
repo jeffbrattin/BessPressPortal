@@ -1,0 +1,9 @@
+
+npm install -g azurite
+
+
+cd besspressportal.api
+dotnet add package Azure.Data.Tables
+
+//start azurite
+azurite --silent --location .\azurite --debug .\azurite\debug.log
