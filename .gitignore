@@ -365,3 +365,7 @@ FodyWeavers.xsd
 /DockerHelp.txt
 /set up.txt
 /BessPressPortal.Api/Properties/launchSettings.json
+/Azure.txt
+/set up.txt
+/BessPressPortal.Client/Properties/launchSettings.json
+/BessPressPortal.Api/appsettings.Development.json
