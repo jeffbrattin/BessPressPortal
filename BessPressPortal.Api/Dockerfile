@@ -6,17 +6,28 @@ EXPOSE 80
 # Build image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY BessPressPortal.Api.csproj ./
-COPY ../BessPressPortal.Shared/BessPressPortal.Shared.csproj ../BessPressPortal.Shared/
-RUN dotnet restore "./BessPressPortal.Api.csproj"
-COPY . .
-COPY ../BessPressPortal.Shared ../BessPressPortal.Shared
-RUN dotnet build "BessPressPortal.Api.csproj" -c Release -o /app/build
 
+# Copy .csproj files with correct relative paths
+COPY BessPressPortal.Api/BessPressPortal.Api.csproj BessPressPortal.Api/
+COPY BessPressPortal.Shared/BessPressPortal.Shared.csproj BessPressPortal.Shared/
+
+# Restore
+WORKDIR /src/BessPressPortal.Api
+RUN dotnet restore
+
+# Copy the full source code
+WORKDIR /src
+COPY BessPressPortal.Api/ BessPressPortal.Api/
+COPY BessPressPortal.Shared/ BessPressPortal.Shared/
+
+WORKDIR /src/BessPressPortal.Api
+RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BessPressPortal.Api.csproj" -c Release -o /app/publish
+WORKDIR /src/BessPressPortal.Api
+RUN dotnet publish -c Release -o /app/publish
 
+# Final image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
