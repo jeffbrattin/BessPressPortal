@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{8EC462FD
 	ProjectSection(SolutionItems) = preProject
 		Azure.txt = Azure.txt
 		DockerHelp.txt = DockerHelp.txt
+		Git.txt = Git.txt
 		set up.txt = set up.txt
 	EndProjectSection
 EndProject

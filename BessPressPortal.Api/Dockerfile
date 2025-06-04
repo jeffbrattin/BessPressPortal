@@ -13,6 +13,7 @@ COPY . .
 COPY ../BessPressPortal.Shared ../BessPressPortal.Shared
 RUN dotnet build "BessPressPortal.Api.csproj" -c Release -o /app/build
 
+
 FROM build AS publish
 RUN dotnet publish "BessPressPortal.Api.csproj" -c Release -o /app/publish
 
