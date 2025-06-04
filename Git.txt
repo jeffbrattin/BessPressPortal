@@ -1,0 +1,1 @@
+azuretablestorage has code to asp.core identity framework
