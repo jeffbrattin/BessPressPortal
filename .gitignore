@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Azure.txt
+/DockerHelp.txt
+/set up.txt
+/BessPressPortal.Api/Properties/launchSettings.json

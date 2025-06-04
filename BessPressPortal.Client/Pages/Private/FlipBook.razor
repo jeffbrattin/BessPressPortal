@@ -1,0 +1,44 @@
+﻿@page "/flipbook"
+@inject IJSRuntime JS
+
+<h3>HTML Book</h3>
+
+<div id="magazine" style="width:1152px; height:752px; margin:auto;">
+    <div style="background-image:url(jspages/01.jpg);"></div>
+    <div style="background-image:url(jspages/02.jpg);"></div>
+    <div style="background-image:url(jspages/03.jpg);"></div>
+    <div style="background-image:url(jspages/04.jpg);"></div>
+    <div style="background-image:url(jspages/05.jpg);"></div>
+    <div style="background-image:url(jspages/06.jpg);"></div>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <button @onclick="PreviousPage">⟵ Back</button>
+    <button @onclick="NextPage">Forward ⟶</button>
+</div>
+
+@code {
+    private IJSObjectReference? _module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Lazy load the JS module
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/turnInterop.module.js");
+            await _module.InvokeVoidAsync("initTurn", "magazine");
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (_module != null)
+            await _module.InvokeVoidAsync("prevPage", "magazine");
+    }
+
+    private async Task NextPage()
+    {
+        if (_module != null)
+            await _module.InvokeVoidAsync("nextPage", "magazine");
+    }
+}

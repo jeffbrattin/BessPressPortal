@@ -122,12 +122,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.UseCors("BlazorClient"); // Apply CORS before Authentication/Authorization
-app.UseCors("AllowAll");
+app.UseCors("BlazorClient"); // Apply CORS before Authentication/Authorization
+//app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers(); // If using API controllers
+    endpoints.MapGet("/", () => "API is running"); // Optional default response
+});
 
 
 app.Run();

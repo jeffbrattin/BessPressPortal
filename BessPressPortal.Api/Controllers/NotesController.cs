@@ -1,6 +1,6 @@
 ﻿namespace BessPressPortal.Api.Controllers
 {
-    using global::BessPressPortal.Api.AzureTableStorage;
+    using global::BessPressPortal.Api.Entities;
     using global::BessPressPortal.Api.Services;
     using global::BessPressPortal.Shared.Models;
     using Microsoft.AspNetCore.Mvc;

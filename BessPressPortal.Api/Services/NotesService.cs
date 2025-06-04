@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System;
-    using global::BessPressPortal.Api.AzureTableStorage;
+    using global::BessPressPortal.Api.Entities;
 
         public class NotesService
         {

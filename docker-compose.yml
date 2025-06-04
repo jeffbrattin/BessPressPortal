@@ -1,0 +1,39 @@
+services:
+  besspressportal-api:
+    build:
+      context: .
+      dockerfile: BessPressPortal.Api/Dockerfile
+    ports:
+      - "5030:8080"
+    depends_on:
+      - azurite
+    networks:
+      - app-network
+
+  besspressportal-client:
+    build:
+      context: .
+      dockerfile: BessPressPortal.Client/Dockerfile
+    ports:
+      - "5065:80"
+    networks:
+      - app-network
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: azurite --tableHost 0.0.0.0 --queueHost 0.0.0.0 --blobHost 0.0.0.0
+    ports:
+      - "10000:10000"  # Blob
+      - "10001:10001"  # Queue
+      - "10002:10002"  # Table
+    volumes:
+      - azurite-data:/data
+    networks:
+      - app-network
+
+volumes:
+  azurite-data:
+
+networks:
+  app-network:
+    driver: bridge

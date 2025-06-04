@@ -4,7 +4,6 @@
     using Azure;
     using Azure.Data.Tables;
     using BessPressPortal.Shared.Models;
-    using global::BessPressPortal.Api.AzureTableStorage;
     using global::BessPressPortal.Api.Entities;
     using global::BessPressPortal.Api.Helpers;
     using global::BessPressPortal.Client.Pages.Private;

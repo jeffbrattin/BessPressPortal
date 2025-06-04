@@ -1,0 +1,62 @@
+﻿@page "/offline"
+
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
+<h3>Offline HTML Viewer</h3>
+
+<button @onclick="DownloadHtml">Download for Offline Use</button>
+<button @onclick="ShowHtml">Show Offline HTML</button>
+
+
+
+<div id="book-container" style="height: 800px; overflow-y: hidden;">
+    @((MarkupString)htmlContent)
+</div>
+
+<button @onclick="NextPage">Next</button>
+<button @onclick="PrevPage">Prev</button>
+
+@code {
+    string htmlContent;
+    private int page = 0;
+    private int pageHeight = 800;
+    private bool _jsLoaded = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_jsLoaded)
+        {
+            await JS.InvokeVoidAsync("import", "./js/reader.js");
+            _jsLoaded = true;
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = new HttpClient { BaseAddress = new Uri(Navigation.BaseUri) };
+        htmlContent = await client.GetStringAsync("ContentLibrary/test1.html");
+    }
+
+
+    async Task DownloadHtml()
+    {
+        await JS.InvokeVoidAsync("fileCache.cacheFile", "https://localhost:7163/ContentLibrary/test1.html");
+    }
+
+    async Task ShowHtml()
+    {
+        htmlContent = await JS.InvokeAsync<string>("fileCache.getCachedFile", "https://localhost:7163/ContentLibrary/test1.html");
+    }
+
+
+
+
+    private async Task NextPage() =>
+        await JS.InvokeVoidAsync("scrollBook", ++page, pageHeight);
+
+    private async Task PrevPage() =>
+        await JS.InvokeVoidAsync("scrollBook", --page, pageHeight);
+
+}

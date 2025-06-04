@@ -1,5 +1,4 @@
 ﻿using BessPressPortal.Api.Services;
-using global::BessPressPortal.Api.AzureTableStorage;
 using global::BessPressPortal.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
