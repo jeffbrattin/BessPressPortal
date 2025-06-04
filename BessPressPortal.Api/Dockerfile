@@ -1,28 +1,21 @@
-#API for BessPress Portal
-# Use ASP.NET Core runtime image
+# Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# Build
+# Build image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-
-# Paths relative to solution root
-COPY BessPressPortal.Api/BessPressPortal.Api.csproj BessPressPortal.Api/
-COPY BessPressPortal.Shared/BessPressPortal.Shared.csproj BessPressPortal.Shared/
-RUN dotnet restore BessPressPortal.Api/BessPressPortal.Api.csproj
-
-# Copy everything
+COPY BessPressPortal.Api.csproj ./
+COPY ../BessPressPortal.Shared/BessPressPortal.Shared.csproj ../BessPressPortal.Shared/
+RUN dotnet restore "./BessPressPortal.Api.csproj"
 COPY . .
-
-WORKDIR /src/BessPressPortal.Api
-RUN dotnet build BessPressPortal.Api.csproj -c Release -o /app/build
+COPY ../BessPressPortal.Shared ../BessPressPortal.Shared
+RUN dotnet build "BessPressPortal.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish BessPressPortal.Api.csproj -c Release -o /app/publish
+RUN dotnet publish "BessPressPortal.Api.csproj" -c Release -o /app/publish
 
-# Final image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

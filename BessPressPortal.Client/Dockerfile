@@ -8,6 +8,7 @@ COPY . .
 WORKDIR "/src/BessPressPortal.Client"
 RUN dotnet publish "BessPressPortal.Client.csproj" -c Release -o /app/publish
 
-# Final stage
+# Runtime stage (use nginx, and serve from port 80)
 FROM nginx:alpine
 COPY --from=build /app/publish/wwwroot /usr/share/nginx/html
+EXPOSE 80
