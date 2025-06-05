@@ -3,10 +3,10 @@ name: Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
 
 env:
-  AZURE_CONTAINER_REGISTRY: besspressregistry.azurecr.io
+  AZURE_CONTAINER_REGISTRY: besspressregistry-dhapfpf0bqh9cjbu.azurecr.io
   CONTAINER_APP_NAME_API: besspresspportalapi
   CONTAINER_APP_NAME_CLIENT: besspressportalclient
   RESOURCE_GROUP: BessPress
@@ -27,12 +27,13 @@ jobs:
       - name: Build and push API image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest -f BessPressPortal.Api/Dockerfile .
-          echo "${{ secrets.AZURE_CREDENTIALS }}" | jq -r .clientSecret | docker login $AZURE_CONTAINER_REGISTRY -u ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
+          az acr login --name besspressregistry-dhapfpf0bqh9cjbu
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
 
       - name: Build and push Client image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest -f BessPressPortal.Client/Dockerfile .
+          az acr login --name besspressregistry-dhapfpf0bqh9cjbu
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest
 
       - name: Deploy to Container App (API)
@@ -40,11 +41,11 @@ jobs:
           az containerapp update \
             --name $CONTAINER_APP_NAME_API \
             --resource-group $RESOURCE_GROUP \
-            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
+            --yaml api-config.yaml
 
       - name: Deploy to Container App (Client)
         run: |
           az containerapp update \
             --name $CONTAINER_APP_NAME_CLIENT \
             --resource-group $RESOURCE_GROUP \
-            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest
+            --yaml client-config.yaml

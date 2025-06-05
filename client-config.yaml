@@ -1,0 +1,13 @@
+properties:
+  configuration:
+    ingress:
+      external: true
+      targetPort: 80
+      transport: http
+  template:
+    containers:
+      - image: besspressregistry-dhapfpf0bqh9cjbu.azurecr.io/besspressportalclient:latest
+        name: besspressportalclient
+        env:
+          - name: PORT
+            value: "80"
