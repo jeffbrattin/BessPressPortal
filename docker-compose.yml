@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: BessPressPortal.Api/Dockerfile
     ports:
-      - "5030:8080"
+      - "5030:80"
     depends_on:
       - azurite
     networks:
