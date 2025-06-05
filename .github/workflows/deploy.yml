@@ -3,7 +3,7 @@ name: Deploy to Azure Container Apps
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
 
 env:
   AZURE_CONTAINER_REGISTRY: besspressregistry-dhapfpf0bqh9cjbu.azurecr.io
@@ -27,7 +27,7 @@ jobs:
       - name: Build and push API image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest -f BessPressPortal.Api/Dockerfile .
-          az acr login --name $(echo $AZURE_CONTAINER_REGISTRY | cut -d'.' -f1)
+          az acr login --name besspressregistry-dhapfpf0bqh9cjbu
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
 
       - name: Build and push Client image
@@ -40,11 +40,15 @@ jobs:
           az containerapp update \
             --name $CONTAINER_APP_NAME_API \
             --resource-group $RESOURCE_GROUP \
-            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
+            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest \
+            --target-port 8080 \  # Use 8080 to match docker-compose.yml, or 80 if updated
+            --set-env-vars "ASPNETCORE_URLS=http://+:8080"  # Adjust if using port 80
 
       - name: Deploy to Container App (Client)
         run: |
           az containerapp update \
             --name $CONTAINER_APP_NAME_CLIENT \
             --resource-group $RESOURCE_GROUP \
-            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest
+            --image $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest \
+            --target-port 80 \  # Matches docker-compose.yml
+            --set-env-vars "PORT=80"  # Adjust based on client needs
