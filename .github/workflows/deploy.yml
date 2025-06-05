@@ -27,7 +27,7 @@ jobs:
       - name: Build and push API image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest -f BessPressPortal.Api/Dockerfile .
-          echo "${{ secrets.AZURE_CREDENTIALS }}" | jq -r .clientSecret | docker login $AZURE_CONTAINER_REGISTRY -u ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
+          az acr login --name $(echo $AZURE_CONTAINER_REGISTRY | cut -d'.' -f1)
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
 
       - name: Build and push Client image
