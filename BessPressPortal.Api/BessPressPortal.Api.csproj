@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BessPressPortal.Client\BessPressPortal.Client.csproj" />
     <ProjectReference Include="..\BessPressPortal.Shared\BessPressPortal.Shared.csproj" />
   </ItemGroup>
 
