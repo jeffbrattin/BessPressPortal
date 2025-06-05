@@ -1,0 +1,13 @@
+properties:
+  configuration:
+    ingress:
+      external: true
+      targetPort: 8080
+      transport: http
+  template:
+    containers:
+      - image: besspressregistry-dhapfpf0bqh9cjbu.azurecr.io/besspresspportalapi:latest
+        name: besspresspportalapi
+        env:
+          - name: ASPNETCORE_URLS
+            value: "http://+:8080"
