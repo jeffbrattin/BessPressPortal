@@ -6,7 +6,7 @@ on:
       - main  # or your default branch
 
 env:
-  AZURE_CONTAINER_REGISTRY: besspressregistry.azurecr.io
+  AZURE_CONTAINER_REGISTRY: besspressregistry-dhapfpf0bqh9cjbu.azurecr.io
   CONTAINER_APP_NAME_API: besspresspportalapi
   CONTAINER_APP_NAME_CLIENT: besspressportalclient
   RESOURCE_GROUP: BessPress
