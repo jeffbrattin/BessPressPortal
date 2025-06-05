@@ -2,7 +2,7 @@ properties:
   configuration:
     ingress:
       external: true
-      targetPort: 8080
+      targetPort: 80
       transport: http
   template:
     containers:
