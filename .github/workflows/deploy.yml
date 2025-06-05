@@ -27,12 +27,13 @@ jobs:
       - name: Build and push API image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest -f BessPressPortal.Api/Dockerfile .
-          .az acr login --name besspressregistry-dhapfpf0bqh9cjbu
+          az acr login --name besspressregistry-dhapfpf0bqh9cjbu
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_API:latest
 
       - name: Build and push Client image
         run: |
           docker build -t $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest -f BessPressPortal.Client/Dockerfile .
+          az acr login --name besspressregistry-dhapfpf0bqh9cjbu
           docker push $AZURE_CONTAINER_REGISTRY/$CONTAINER_APP_NAME_CLIENT:latest
 
       - name: Deploy to Container App (API)
