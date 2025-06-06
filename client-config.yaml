@@ -11,3 +11,5 @@ properties:
         env:
           - name: PORT
             value: "80"
+          - name: ApiUrl
+            value: "https://besspresspportalapi.blueground-271272db.westus2.azurecontainerapps.io/"
