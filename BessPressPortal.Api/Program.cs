@@ -25,15 +25,18 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("BlazorClient", policy =>
     {
-        //policy.WithOrigins(
-        //    "https://localhost:5000", // Blazor WebAssembly client URL (update for production)
-        //    "http://localhost:5000",
-        //    "https://localhost:7163",
-        //    "http://localhost:7163"
-        //)
-        policy.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            policy.WithOrigins("https://besspressportalclient.blueground-271272db.westus2.azurecontainerapps.io")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
     });
 });
 
