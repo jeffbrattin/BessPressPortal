@@ -11,5 +11,3 @@ properties:
         env:
           - name: ASPNETCORE_URLS
             value: "http://+:80"
-          - name: AzureStorage__ConnectionString
-            value: "a070a176-c72c-473e-9766-69c19e94034a"
